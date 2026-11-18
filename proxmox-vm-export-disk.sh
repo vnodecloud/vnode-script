@@ -28,18 +28,19 @@ echo "Đang xử lý ổ đĩa $DISK_KEY (Volume ID: $VOLID)..."
 
 # Lấy đường dẫn thực tế của ổ đĩa thông qua pvesm
 SRC_PATH=$(pvesm path "$VOLID" 2>/dev/null)
-DEST="/root/disk-${vmid}-exported.raw"
+DEST="/root/disk-${vmid}-exported.qcow2"
 
 if [ -n "$SRC_PATH" ] && [ -e "$SRC_PATH" ]; then
-    echo "Đang chuyển đổi và xuất file raw từ: $SRC_PATH"
-    qemu-img convert -O raw "$SRC_PATH" "$DEST"
+    echo "Đang chuyển đổi và xuất file qcow2 từ: $SRC_PATH"
+    qemu-img convert -O qcow2 "$SRC_PATH" "$DEST"
 else
-    echo "Đang chuyển đổi trực tiếp Volume ID sang file raw..."
-    qemu-img convert -O raw "$VOLID" "$DEST"
+    echo "Đang chuyển đổi trực tiếp Volume ID sang file qcow2..."
+    qemu-img convert -O qcow2 "$VOLID" "$DEST"
 fi
 
 if [ $? -eq 0 ]; then
-    echo "Thành công! File được lưu tại: $DEST"
+    echo "Thành công! File qcow2 được lưu tại: $DEST"
+    ls -lh "$DEST"
 else
     echo "Lỗi: Quá trình export disk thất bại!"
     exit 1
